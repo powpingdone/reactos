@@ -118,10 +118,17 @@ function(add_message_headers _type)
         get_filename_component(_file_name ${_file} NAME_WE)
         set(_converted_file ${CMAKE_CURRENT_BINARY_DIR}/${_file}) ## ${_file_name}.mc
         set(_source_file ${CMAKE_CURRENT_SOURCE_DIR}/${_file})    ## ${_file_name}.mc
-        add_custom_command(
-            OUTPUT "${_converted_file}"
-            COMMAND native-utf16le "${_source_file}" "${_converted_file}" nobom
-            DEPENDS native-utf16le "${_source_file}")
+        if(MSVC AND CMAKE_HOST_UNIX) # https://bugs.winehq.org/show_bug.cgi?id=49694 tl;dr wine doesnt use the right utf16 endianness
+            add_custom_command(
+                OUTPUT "${_converted_file}"
+                COMMAND native-utf16le "${_source_file}" "${_converted_file}"
+                DEPENDS native-utf16le "${_source_file}")
+        else()
+            add_custom_command(
+                OUTPUT "${_converted_file}"
+                COMMAND native-utf16le "${_source_file}" "${_converted_file}" nobom
+                DEPENDS native-utf16le "${_source_file}")
+        endif() 
         macro_mc(${_flag} ${_converted_file})
         add_custom_command(
             OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${_file_name}.h ${CMAKE_CURRENT_BINARY_DIR}/${_file_name}.rc
