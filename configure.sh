@@ -5,7 +5,8 @@ if [ "x$ROS_ARCH" = "x" ]; then
 	exit 1
 fi
 
-# TODO: fix different arches, get actual version detection, document msvc option, line 11 uses a gnuism, cl.exe takes forever to start
+# TODO: fix different arches, get actual version detection, document msvc option, line 11 uses a gnuism, cl.exe takes forever to start sometimes
+# TODO: link is used as LINK which is case sensitive in unix plats
 echo -n Checking compiler suite...
 if [ ! -z "$VCINSTALLDIR" ]; then
     if $VCINSTALLDIR/bin/x86/cl 2>&1 | grep -q "19\.[0-2][0-9]\.." ; then

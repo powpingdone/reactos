@@ -937,7 +937,7 @@ endfunction()
 if(KDBG)
     set(ROSSYM_LIB "rossym")
 else()
-    set(ROSSYM_LIB "")
+    set(ROSSYM_LIB ":")
 endif()
 
 function(add_rc_deps _target_rc)
